@@ -12,6 +12,6 @@ const signupValidator = (req)=>{
         return"use strong password"
     }
     
-}
+}   
 
 module.exports={signupValidator}
