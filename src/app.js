@@ -4,11 +4,15 @@ const bcrypt = require("bcrypt");
 const User = require("./model/user");
 
 const { signupValidator } = require("./utils/validator.js");
-
+const jwt = require("jsonwebtoken");
 const express = require("express");
+const cookieParser = require("cookie-parser");
+const {userAuth} = require("./middleware/auth");
+
 const app = express();
 const port = 3000;
 app.use(express.json());
+app.use(cookieParser())
 
 app.post("/signup", async (req, res) => {
   try {
@@ -86,19 +90,27 @@ app.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       throw new Error("invalid password");
     }
+    const token = jwt.sign(
+      { userId: validUser._id },"devtinder");
+      
+
+    res.cookie("token",token,{expires:new Date(Date.now()+36000000*12)});
     res.send("login successful");
   } catch (error) {
     res.status(400).send(error.message);
   }
 });
 
-//   try {
-//     await user.save();
-//     res.send("user saved successfully!");
-//   } catch (err) {
-//     res.status(400).send("something went wrong while saving user");
-//   }
-// ;
+
+
+app.get("/profile",userAuth,async(req,res)=>{
+    try{
+
+    res.send(req.user);
+    }catch(err){
+        res.status(401).send("not authenticated")
+    }
+})
 
 app.get("/admin/getData", (req, res) => {
   res.send("fetched all data");

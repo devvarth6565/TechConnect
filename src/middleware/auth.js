@@ -1,10 +1,27 @@
-const adminAuth = (req,res,next)=>{
-    const token ="xy"
-    if(token==="xyz"){
-        next();
-    }else{
-        res.status(401).send("not authenticated")
+const jwt = require("jsonwebtoken");
+const User = require("../model/user");
+
+
+
+const userAuth = async (req,res,next)=>{
+    try{
+
+    const {token} = req.cookies;
+    if(!token){
+        res.send("not authenticated");
     }
+    const decodedMessage = jwt.verify(token,"devtinder");
+    const user = await User.findById(decodedMessage.userId);
+    if(!user){
+        res.send("not authenticated")
+    }
+    req.user = user;
+    next();
+
+}catch(err){
+    res.send("not authenticated")
+}
+  
 }
 
-module.exports={adminAuth,};
+module.exports={userAuth,};
