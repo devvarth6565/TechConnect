@@ -81,20 +81,20 @@ app.get("/feed", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const validUser = await User.findOne({ email: email });
-    if (!validUser) {
+    const user = await User.findOne({ email: email });
+    if (!user) {
       throw new Error("user not found");
     }
 
-    const isPasswordValid = await bcrypt.compare(password, validUser.password);
+    const isPasswordValid = await user.validatePassword(password);
     if (!isPasswordValid) {
       throw new Error("invalid password");
     }
-    const token = jwt.sign(
-      { userId: validUser._id },"devtinder");
-      
+    const token = await user.getJwsToken();
+    res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
 
-    res.cookie("token",token,{expires:new Date(Date.now()+36000000*12)});
+      });
     res.send("login successful");
   } catch (error) {
     res.status(400).send(error.message);
