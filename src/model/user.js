@@ -86,6 +86,8 @@ const userSchema = new mongoose.Schema(
 
 
 
+
+
 userSchema.methods.getJwsToken = async function ()
 {
   const user = this;

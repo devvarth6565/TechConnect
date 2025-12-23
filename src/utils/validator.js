@@ -14,4 +14,11 @@ const signupValidator = (req)=>{
     
 }   
 
-module.exports={signupValidator}
+const validateProfileEdit = (req)=>{
+    const allowedFields = ["firstName","lastName","age","gender","email","photoUrl","githubUrl","linkedinUrl","bio"];
+    
+    return Object.keys(req.body).every(field=>allowedFields.includes(field));
+
+}
+
+module.exports={signupValidator,validateProfileEdit}
