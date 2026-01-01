@@ -60,7 +60,7 @@ authRouter.post("/signup", async (req, res) => {
       });
   
       await newUser.save();
-      res.send("signed up successfully");
+      res.send(newUser);
     } catch (err) {
       console.error("Signup Crash Details:", err);
       res.status(500).send("something went wrong");
@@ -84,7 +84,7 @@ authRouter.post("/signup", async (req, res) => {
           expires: new Date(Date.now() + 8 * 3600000),
   
         });
-      res.send("login successful");
+      res.send(user);
     } catch (error) {
       res.status(400).send(error.message);
     }
