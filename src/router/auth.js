@@ -26,8 +26,9 @@ authRouter.patch("/forgetpassword",async(req,res)=>{
 
       const changedPasswordHash = await bcrypt.hash(decodedMessage.newPassword,10);
       validUser.password = changedPasswordHash;
+      await validUser.save();
       res.send("password changed successfully");
-        await validUser.save();
+       
   }
        
       
@@ -58,8 +59,14 @@ authRouter.post("/signup", async (req, res) => {
         email,
         password: hashPassword,
       });
+
   
       await newUser.save();
+      const token = await newUser.getJwsToken();
+      res.cookie("token", token, {
+          expires: new Date(Date.now() + 8 * 3600000),
+  
+        });
       res.send(newUser);
     } catch (err) {
       console.error("Signup Crash Details:", err);
