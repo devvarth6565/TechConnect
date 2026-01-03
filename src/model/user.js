@@ -45,6 +45,7 @@ const userSchema = new mongoose.Schema(
     },
     photoUrl: {
       type: String,
+      default:"https://images.stockcake.com/public/2/3/7/23754627-0a14-4855-971d-49de7b8aecfc_large/intense-anime-portrait-stockcake.jpg",
       validator(value) {
         if (!validator.isURL(value)) {
           throw new Error("invalid url");
@@ -70,6 +71,16 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
     },
+    skills: {
+      type: [String],
+
+      validate: {
+          validator: function(skillsArray) {
+              return skillsArray.length <= 10;
+          },
+          message: "You can only select up to 10 skills."
+      }
+  },
     gender: {
       type: String,
       validate(value) {
