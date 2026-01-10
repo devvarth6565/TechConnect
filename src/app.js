@@ -10,12 +10,14 @@ const authRouter = require("./router/auth.js");
 const userRouter = require("./router/user.js");
 const cors = require("cors");
 
+require("dotenv").config();
+
 app.use(cors({
   origin: "http://localhost:5173", 
   credentials: true,               
 }));
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser()) 
 
 
 

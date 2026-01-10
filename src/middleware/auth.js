@@ -10,7 +10,7 @@ const userAuth = async (req,res,next)=>{
     if(!token){
        return res.status(401) .send("not authenticated");
     }
-    const decodedMessage = jwt.verify(token,"devtinder");
+    const decodedMessage = jwt.verify(token,process.env.JWT_SECRET_KEY);
     const user = await User.findById(decodedMessage.userId);
     if(!user){
         res.send("not authenticated")
